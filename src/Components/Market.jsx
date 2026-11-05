@@ -1,13 +1,126 @@
+import React, { useState } from "react";
 import ProductCard from "./ProductCard";
 
-// Accept cart and addToCart as props from App
+function AddProductForm({ onAddProduct }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    description: "",
+    image: "",
+    isAvailable: true,
+  });
+
+  function handleFormChange(event) {
+    const { name, value, type, checked } = event.target;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (!formData.name || !formData.price) return;
+
+    onAddProduct({
+      id: Date.now(),
+      name: formData.name,
+      price: parseFloat(formData.price),
+      description: formData.description || "No description provided.",
+      image: formData.image || "https://placeholder.com",
+      isAvailable: formData.isAvailable,
+    });
+
+    setFormData({
+      name: "",
+      price: "",
+      description: "",
+      image: "",
+      isAvailable: true,
+    });
+  }
+
+  return (
+    <div className="card p-4 mb-5 border-primary shadow-sm">
+      <h3 className="h4 mb-3 text-primary">Add New Product</h3>
+      <form onSubmit={handleSubmit} className="row g-3">
+        <div className="col-md-6">
+          <label className="form-label">Product Name</label>
+          <input
+            type="text"
+            className="form-control"
+            name="name"
+            value={formData.name}
+            onChange={handleFormChange}
+            required
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Price ($)</label>
+          <input
+            type="number"
+            className="form-control"
+            name="price"
+            value={formData.price}
+            onChange={handleFormChange}
+            required
+            min="0"
+            step="0.01"
+          />
+        </div>
+        <div className="col-12">
+          <label className="form-label">Image URL</label>
+          <input
+            type="url"
+            className="form-control"
+            name="image"
+            value={formData.image}
+            onChange={handleFormChange}
+            placeholder="https://example.com"
+          />
+        </div>
+        <div className="col-12">
+          <label className="form-label">Description</label>
+          <textarea
+            className="form-control"
+            name="description"
+            value={formData.description}
+            onChange={handleFormChange}
+            rows="2"
+          ></textarea>
+        </div>
+        <div className="col-12">
+          <div className="form-check">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="isAvailableCheck"
+              name="isAvailable"
+              checked={formData.isAvailable}
+              onChange={handleFormChange}
+            />
+            <label className="form-check-label" htmlFor="isAvailableCheck">
+              In Stock &amp; Available Immediately
+            </label>
+          </div>
+        </div>
+        <div className="col-12">
+          <button type="submit" className="btn btn-success w-100">
+            Create and Add Product
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 function Market({ cart, addToCart }) {
-  const products = [
-    // ... (Keep all your product data here exactly the same)
+  const [products, setProducts] = useState([
     {
       id: 1,
       name: "Framework Laptop 12 (Intel® Core™ Series 3)",
-      image: "https://static.frame.work/vnhapdfuirbckad88ctfkwlb0hjg",
+      image: "public/imege 1.jpg",
       description: "13-inch modular laptop...",
       price: 699,
       isAvailable: true,
@@ -15,7 +128,7 @@ function Market({ cart, addToCart }) {
     {
       id: 2,
       name: "Framework Laptop 12 DIY Edition (Intel® Core™ Series 3)",
-      image: "https://static.frame.work/dmgr8ou5tmk5podprsmlm0wlq9vw",
+      image: "public/Hp Omega 16 Max Ultra.webp",
       description: "16-inch performance laptop...",
       price: 549,
       isAvailable: true,
@@ -23,7 +136,7 @@ function Market({ cart, addToCart }) {
     {
       id: 3,
       name: "Framework Laptop 13 Pro DIY Edition (AMD Ryzen™ AI 300 Series)",
-      image: "https://static.frame.work/u2h7dlre8cgys5k97odeo4gqjd0v",
+      image: "public/Laptop 13.jpg",
       description: "12-inch compact laptop...",
       price: 1399,
       isAvailable: false,
@@ -31,29 +144,33 @@ function Market({ cart, addToCart }) {
     {
       id: 4,
       name: "Framework Laptop 13 Pro DIY Edition (Intel® Core™ Ultra Series 3)",
-      image: "https://static.frame.work/p4pbvfiu128s84oplq2jjhtf7n0i",
+      image: "public/Laptop12.jpg",
       description: "13-inch modular laptop...",
       price: 1199,
       isAvailable: false,
     },
     {
       id: 5,
-      name: "Framework Laptop 16",
-      image: "https://static.frame.work/vhz9cwchzrgaz4le82wlqv6ca87a",
+      name: "public/Framework Laptop 16 Pro DIY Edition (Intel® Core™ Ultra Series 3)",
+      image: "public/Laptop 16.png",
       description: "16-inch performance laptop...",
       price: 1699,
       isAvailable: true,
     },
-  ];
+  ]);
 
-  // Calculate total from the cart passed down from App
+  function handleAddProduct(newProduct) {
+    setProducts((prevProducts) => [...prevProducts, newProduct]);
+  }
+
   const cartTotal = cart.reduce((total, item) => total + item.price, 0);
 
   return (
-    <section
-      className="row g-3 align-items-stretch"
-      aria-labelledby="products-heading"
-    >
+    <section className="row g-3 align-items-stretch" aria-labelledby="products-heading">
+      <div className="col-12">
+        <AddProductForm onAddProduct={handleAddProduct} />
+      </div>
+
       <div className="col-12 d-flex justify-content-between align-items-center mb-3">
         <h2 id="products-heading" className="h2 mb-0">
           Laptops
@@ -71,13 +188,10 @@ function Market({ cart, addToCart }) {
           <button
             type="button"
             className="btn btn-primary mt-2 w-100"
-            // Use the addToCart function passed from App
             onClick={() => addToCart(product)}
             disabled={!product.isAvailable}
           >
-            {product.isAvailable
-              ? `Add to cart — $${product.price}`
-              : "Out of stock"}
+            {product.isAvailable ? `Add to cart — $${product.price}` : "Out of stock"}
           </button>
         </div>
       ))}
