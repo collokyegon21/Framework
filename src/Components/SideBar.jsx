@@ -1,4 +1,4 @@
-function Sidebar({ isOpen, onClose }) {
+function SideBar({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const links = [
@@ -60,4 +60,4 @@ function Sidebar({ isOpen, onClose }) {
   );
 }
 
-export default Sidebar;
+export default SideBar;

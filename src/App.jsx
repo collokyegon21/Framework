@@ -6,9 +6,11 @@ import Footer from "./Components/Footer";
 import CartDrawer from "./Components/CartDrawer";
 import Features from "./Components/Features";
 import Highlights from "./Components/Highlights";
+
 function App() {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   const addToCart = (product) => {
     setCart([...cart, product]);
@@ -24,13 +26,18 @@ function App() {
   return (
     <>
       <header className="app-header py-3 py-md-4">
-        <NavBar cart={cart} onOpenCart={() => setIsCartOpen(true)} />
+        <NavBar
+          cart={cart}
+          onOpenCart={() => setIsCartOpen(true)}
+          search={search}
+          setSearch={setSearch}
+        />
       </header>
 
       <main className="container app-main">
         <Hero />
-        <Market cart={cart} addToCart={addToCart} />
-        <Features />
+        <Market cart={cart} addToCart={addToCart} search={search} />
+
         <Highlights />
       </main>
 
@@ -38,7 +45,6 @@ function App() {
         <Footer />
       </footer>
 
-      {/* 2. Pass the remove function to the CartDrawer */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
