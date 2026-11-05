@@ -130,7 +130,7 @@ export default function NavBar({ cart, onOpenCart, search, setSearch }) {
       </nav>
 
       {/* Mobile sidebar */}
-      {/* <SideBar isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} /> */}
+      <SideBar isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
       {/* Mobile search */}
       <div className="d-lg-none bg-white border-bottom p-3">
