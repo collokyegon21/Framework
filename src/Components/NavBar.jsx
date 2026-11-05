@@ -21,7 +21,7 @@ export default function NavBar({ cart, onOpenCart, search, setSearch }) {
             href="#home"
             className="navbar-brand fw-bold fs-3 text-dark me-lg-5"
           >
-            Framework<span className="text-success">.</span>
+            Framework.
           </a>
 
           <div className="collapse navbar-collapse">
@@ -110,7 +110,6 @@ export default function NavBar({ cart, onOpenCart, search, setSearch }) {
             </div>
           </div>
 
-          {/* Mobile cart */}
           <div className="d-flex align-items-center gap-3 ms-auto d-lg-none">
             <button
               className="btn border-0 p-0 text-dark shadow-none position-relative"
